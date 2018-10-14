@@ -9,11 +9,6 @@ edge(3,4,1).
 edge(3,5,2.2).
 edge(4,5,1).
 
-
-load(File) :- 
-  exists_file(File),
-  consult(File).
-  
 connected(X,Y,L) :- edge(X,Y,L) ; edge(Y,X,L).
 
 path(A,B,Path,Len) :-
