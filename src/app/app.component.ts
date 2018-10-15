@@ -1,15 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  animations: [
-  ]
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.scss"],
+  animations: []
 })
 export class AppComponent implements OnInit {
   state: Array<string> = [];
   values: Array<number> = [];
-  title = 'P3Lenguajes';
+  title = "P3Lenguajes";
   interval;
   enabled: boolean = false;
   begin: number;
@@ -22,33 +21,62 @@ export class AppComponent implements OnInit {
   }
 
   selectParams(index: number) {
-    if(!this.begin)
-      this.begin = index -1;
-    else{
+    if (!this.begin) this.begin = index - 1;
+    else {
       this.end = index + 1;
       this.enabled = true;
+      this.setBee(this.end);
       this.start();
     }
   }
 
-  start(){
+  start() {
     this.interval = setInterval(() => {
       this.begin++;
-      if(this.begin === this.end) {
-        clearInterval(this.interval);
-        return;
-      };
       let style = document.createElement("style");
       style.type = "text/css";
       style.innerHTML =
-      ".background { background-image: url('../assets/spider.png'); background-repeat: no-repeat}";
+        ".background { background-image: url('../assets/spider.png'); background-repeat: no-repeat}";
       document.getElementsByTagName("head")[0].appendChild(style);
-      let prev = document.getElementById(`${this.begin-1}`);
-      prev.classList.remove("background")
+      let prev = document.getElementById(`${this.begin - 1}`);
+      prev.classList.remove("background");
 
       let next = document.getElementById(`${this.begin}`);
       //console.log(next)
       next.classList.add("background");
-    },1000)
+      next.classList.add("animated");
+      next.classList.add("shake");
+      if (this.begin === this.end) {
+        clearInterval(this.interval);
+        this.setFinal();
+        return;
+      }
+    }, 1000);
+  }
+
+  setBee(index: number) {
+    let style = document.createElement("style");
+    style.type = "text/css";
+    style.innerHTML =
+      ".bee { background-image: url('../assets/bee.png'); background-repeat: no-repeat; background-position: center}";
+    document.getElementsByTagName("head")[0].appendChild(style);
+    let next = document.getElementById(`${index}`);
+    next.classList.add("bee");
+    next.classList.add("animated");
+    next.classList.add("tada");
+    next.classList.add("infinite");
+  }
+
+  setFinal() {
+    let style = document.createElement("style");
+    style.type = "text/css";
+    style.innerHTML =
+      ".background { background-image: url('../assets/end.png'); background-repeat: no-repeat; background-position: center}";
+    document.getElementsByTagName("head")[0].appendChild(style);
+    let next = document.getElementById(`${this.end}`);
+    next.classList.add("background");
+    next.classList.add("animated");
+    next.classList.add("tada");
+    next.classList.add("infinite");
   }
 }
