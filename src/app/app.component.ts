@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, interval } from "rxjs";
-import { MatGridTile } from '@angular/material';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -13,6 +11,9 @@ export class AppComponent implements OnInit {
   values: Array<number> = [];
   title = 'P3Lenguajes';
   interval;
+  enabled: boolean = false;
+  begin: number;
+  end: number;
 
   ngOnInit() {
     for (let i = 1; i <= 36; i++) {
@@ -20,12 +21,20 @@ export class AppComponent implements OnInit {
     }
   }
 
-  start(tile, index: number){
-    console.log(tile)
-    let count = index-1;
+  selectParams(index: number) {
+    if(!this.begin)
+      this.begin = index -1;
+    else{
+      this.end = index + 1;
+      this.enabled = true;
+      this.start();
+    }
+  }
+
+  start(){
     this.interval = setInterval(() => {
-      count++;
-      if(count === this.values.length) {
+      this.begin++;
+      if(this.begin === this.end) {
         clearInterval(this.interval);
         return;
       };
@@ -34,10 +43,10 @@ export class AppComponent implements OnInit {
       style.innerHTML =
       ".background { background-image: url('../assets/spider.png'); background-repeat: no-repeat}";
       document.getElementsByTagName("head")[0].appendChild(style);
-      let prev = document.getElementById(`${count-1}`);
+      let prev = document.getElementById(`${this.begin-1}`);
       prev.classList.remove("background")
 
-      let next = document.getElementById(`${count}`);
+      let next = document.getElementById(`${this.begin}`);
       //console.log(next)
       next.classList.add("background");
     },1000)
