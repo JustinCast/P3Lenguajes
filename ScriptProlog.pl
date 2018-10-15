@@ -50,6 +50,7 @@ min([_|R],M,Min) :- min(R,M,Min).
 % :- http_handler(root(hello_world), say_hi, []).		% (1)
 :- http_handler(root(resolve),handle,[]).
 :- http_handler(root(add),add,[]).
+:- http_handler(root(clean),cleanBD,[]).
 
 server(Port) :-
    http_server(http_dispatch,[port(Port)]).
@@ -62,6 +63,7 @@ add(Request) :-
   reply_json(DictOut),
   json_to_prolog(DictIn, PrologIn),
   asserta(edge(PrologIn.from, PrologIn.to, PrologIn.weight)).
+
 handle(Request) :-
   http_read_json(Request, DictIn, [json_object(dict)]),
   json_to_prolog(DictIn, PrologIn),
@@ -69,7 +71,11 @@ handle(Request) :-
   DictOut= json([path = Path, len = Length]),
   reply_json(DictOut).
 
-  
+cleanBD(Request) :-
+  http_read_json(Request, DictIn, [json_object(dict)]),
+  json_to_prolog(DictIn, PrologIn),
+  retractall(edge(PrologIn.from, PrologIn.to, PrologIn.weight)).
+    
 /* try goals like
 
   ?- shortest(1,5,Path,Length).
