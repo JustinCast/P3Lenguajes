@@ -45,16 +45,26 @@ min([_|R],M,Min) :- min(R,M,Min).
 :- use_module(library(http/http_dispatch)).
 :- use_module(library(http/http_json)).
 :- use_module(library(http/json_convert)).
+:- use_module(library(http/json)).
 
 % :- http_handler(root(hello_world), say_hi, []).		% (1)
-:- http_handler(root(.),handle,[]).
+:- http_handler(root(resolve),handle,[]).
+:- http_handler(root(add),add,[]).
 
 server(Port) :-
    http_server(http_dispatch,[port(Port)]).
 
+add(Request) :-
+  %http_read_json(Request, DictIn,[json_object(term)]),
+  http_read_json(Request, DictIn, [json_object(dict)]),
+  format(user_output,"DictIn is: ~p~n",[DictIn]),
+  DictOut = DictIn,
+  reply_json(DictOut),
+  json_to_prolog(DictIn, PrologIn),
+  asserta(edge(PrologIn.from, PrologIn.to, PrologIn.weight)).
 handle(_) :-
   format(user_output,"justin ~p~n"),
-  shortest(1 ,5, Path, Length),
+  shortest(1, 7, Path, Length),
   DictOut= json([path = Path, len = Length]),
   reply_json(DictOut).
 /*server(Port) :-						% (2)
