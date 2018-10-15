@@ -41,7 +41,31 @@ min([],M,M).
 min([[P,L]|R],[_,M],Min) :- L < M, !, min(R,[P,L],Min). 
 min([_|R],M,Min) :- min(R,M,Min).
 
+:- use_module(library(http/thread_httpd)).
+:- use_module(library(http/http_dispatch)).
+:- use_module(library(http/http_json)).
+:- use_module(library(http/json_convert)).
 
+% :- http_handler(root(hello_world), say_hi, []).		% (1)
+:- http_handler(root(.),handle,[]).
+
+server(Port) :-
+   http_server(http_dispatch,[port(Port)]).
+
+handle(_) :-
+  format(user_output,"justin ~p~n"),
+  shortest(1 ,5, Path, Length),
+  DictOut= json([path = Path, len = Length]),
+  reply_json(DictOut).
+/*server(Port) :-						% (2)
+        http_server(http_dispatch, [port(Port)]).*/
+
+/*say_hi(_Request) :-					% (3)
+  format('Content-type: application/json'),
+  status(200),
+  json_object({'j': 'justin'}).*/
+
+  
 /* try goals like
 
   ?- shortest(1,5,Path,Length).
