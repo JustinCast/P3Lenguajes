@@ -11,8 +11,8 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
         transform: 'scale(1)'
       })),
       state('state2', style({
-        backgroundColor: 'red',
-        transform: 'scale(1.5)'
+        background: "url('../assets/spider.png')",
+        backgroundRepeat: 'no-repeat'
       })),
       transition('*=>state1', animate('300ms')),
       transition('*=>state2', animate('2000ms'))
