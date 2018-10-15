@@ -62,18 +62,12 @@ add(Request) :-
   reply_json(DictOut),
   json_to_prolog(DictIn, PrologIn),
   asserta(edge(PrologIn.from, PrologIn.to, PrologIn.weight)).
-handle(_) :-
-  format(user_output,"justin ~p~n"),
-  shortest(1, 7, Path, Length),
+handle(Request) :-
+  http_read_json(Request, DictIn, [json_object(dict)]),
+  json_to_prolog(DictIn, PrologIn),
+  shortest(PrologIn.from, PrologIn.to, Path, Length),
   DictOut= json([path = Path, len = Length]),
   reply_json(DictOut).
-/*server(Port) :-						% (2)
-        http_server(http_dispatch, [port(Port)]).*/
-
-/*say_hi(_Request) :-					% (3)
-  format('Content-type: application/json'),
-  status(200),
-  json_object({'j': 'justin'}).*/
 
   
 /* try goals like
