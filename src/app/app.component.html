@@ -1,3 +1,11 @@
-<mat-grid-list cols="6" rowHeight="2:1">
-  <mat-grid-tile *ngFor="let v of values; let i = index">{{i}}</mat-grid-tile>
-</mat-grid-list>
+<div class="container mt-5">
+  <h2 class="text-center text-primary">Spider Robot</h2>
+  <div class="text-right mb-1">
+    <button color="primary" mat-stroked-button><mat-icon>play_arrow</mat-icon></button>
+    <button color="warn" class="ml-1" mat-stroked-button><mat-icon>loop</mat-icon></button>
+    <button color="link" class="ml-1" mat-stroked-button>Add edge connection</button>
+  </div>
+  <mat-grid-list cols="6" rowHeight="2:1">
+    <mat-grid-tile *ngFor="let v of values; let i = index">{{i}}</mat-grid-tile>
+  </mat-grid-list>
+</div>
