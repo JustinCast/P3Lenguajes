@@ -10,7 +10,7 @@ export class AppComponent implements OnInit {
   values: Array<number> = [];
   title = "P3Lenguajes";
   interval;
-  enabled: boolean = false;
+  disabled: boolean = false;
   begin: number;
   end: number;
 
@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
     if (!this.begin) this.begin = index - 1;
     else {
       this.end = index + 1;
-      this.enabled = true;
+      this.disabled = true;
       this.setBee(this.end);
       this.start();
     }
@@ -78,5 +78,16 @@ export class AppComponent implements OnInit {
     next.classList.add("animated");
     next.classList.add("tada");
     next.classList.add("infinite");
+  }
+
+  reset() {
+    this.disabled = false;
+    let next = document.getElementById(`${this.end}`);
+    this.begin = undefined; this.end = undefined;
+    next.classList.remove("background");
+    next.classList.remove("animated");
+    next.classList.remove("tada");
+    next.classList.remove("infinite");
+    next.classList.remove("bee");
   }
 }
