@@ -6,6 +6,8 @@
     <button color="link" class="ml-1" mat-stroked-button>Add edge connection</button>
   </div>
   <mat-grid-list cols="6" rowHeight="2:1">
-    <mat-grid-tile *ngFor="let v of values; let i = index">{{i}}</mat-grid-tile>
+    <mat-grid-tile (click)="changeState('state1')" [@changeState]="toState" *ngFor="let v of values; let i = index">
+      {{i}}
+    </mat-grid-tile>
   </mat-grid-list>
 </div>
