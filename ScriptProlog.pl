@@ -64,11 +64,11 @@ path([A | Rest], B, Path, CurrentLength, Length) :-
     NewLength is CurrentLength + X,
     path([C, A | Rest], B, Path, NewLength, Length).
 
-find_paths(A, B) :-
+find_paths(A, B, X) :-
     path([A], B, Path, 0, _),
     reverse(Path, DirectPath),
     printPath(DirectPath),
-    writef('\n'),
+    X = DirectPath,
     !.
 
 printPath([]).

@@ -8,10 +8,10 @@ import org.jpl7.Term;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Map;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Controller {
@@ -20,7 +20,7 @@ public class Controller {
     private boolean bee = false;
     private ArrayList route = new ArrayList();
 
-    public Controller() {
+    public Controller() throws IOException {
         initializeProlog();
     }
 
@@ -32,15 +32,24 @@ public class Controller {
             System.out.println(o);
     }
 
-    private void initializeProlog() {
+    private void initializeProlog() throws IOException {
         String PROLOG = "consult('ScriptProlog.pl')";
         Query query = new Query(PROLOG);
         if (query.hasSolution()) {
             addNodes();
 
-            String shortest = "find_paths(35, 0)";
+            String shortest = "find_paths(0, 3, X)";
             Query q4 = new Query(shortest);
-            System.out.println(q4.oneSolution().toString());
+            String a = q4.oneSolution().get("X").toString()
+                    .replace('[', ' ')
+                    .replace(']', ' ')
+                    .replace('|', ' ')
+                    .replace('(', ' ')
+                    .replace(')', ' ')
+                    .replaceAll("'", "")
+                    .replaceAll(" ", "")
+                    .replaceAll(",", ",");
+            System.out.println(a);
             //String[] routeSplitted = route.split(",");
             //this.route.addAll(Arrays.asList(routeSplitted));
         } else {
