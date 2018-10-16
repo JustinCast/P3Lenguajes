@@ -8,8 +8,6 @@ import javafx.stage.Stage;
 import org.jpl7.Query;
 
 import javax.swing.*;
-import java.util.Arrays;
-import java.util.Hashtable;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Main extends Application {
