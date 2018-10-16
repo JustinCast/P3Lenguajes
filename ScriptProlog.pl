@@ -41,44 +41,46 @@ min([],M,M).
 min([[P,L]|R],[_,M],Min) :- L < M, !, min(R,[P,L],Min). 
 min([_|R],M,Min) :- min(R,M,Min).
 
-:- use_module(library(http/thread_httpd)).
-:- use_module(library(http/http_dispatch)).
-:- use_module(library(http/http_json)).
-:- use_module(library(http/json_convert)).
-:- use_module(library(http/json)).
-:- use_module(library(http/http_cors)).
 
-% :- http_handler(root(hello_world), say_hi, []).		% (1)
-:- http_handler(root(resolve),handle,[]).
-:- http_handler(root(add),add,[]).
-:- http_handler(root(clean),cleanBD,[]).
-:- use_module(library(http/http_cors)).
-:- setting(http:cors, list(atom), [], ['http://localhost:4200']).
-server(Port) :-
-   http_server(http_dispatch,[port(Port)]).
+cleanBD(X, Y, W) :-
+  retractall(edge(X, Y, W)).
 
-add(Request) :-
-  %http_read_json(Request, DictIn,[json_object(term)]),
-  http_read_json(Request, DictIn, [json_object(dict)]),
-  format(user_output,"DictIn is: ~p~n",[DictIn]),
-  DictOut = DictIn,
-  reply_json(DictOut),
-  json_to_prolog(DictIn, PrologIn),
-  asserta(edge(PrologIn.from, PrologIn.to, PrologIn.weight)).
 
-handle(Request) :-
-  cors_enable,
-  http_read_json(Request, DictIn, [json_object(dict)]),
-  json_to_prolog(DictIn, PrologIn),
-  shortest(PrologIn.from, PrologIn.to, Path, Length),
-  DictOut= json([path = Path, len = Length]),
-  reply_json(DictOut).
 
-cleanBD(Request) :-
-  http_read_json(Request, DictIn, [json_object(dict)]),
-  json_to_prolog(DictIn, PrologIn),
-  retractall(edge(PrologIn.from, PrologIn.to, PrologIn.weight)).
-    
+
+
+
+oh(0, 1, 1).
+oh(1, 2, 3).
+oh(1, 3, 3).
+oh(2, 3, 3).
+oh(4, 5, 3).
+
+
+path([B | Rest], B, [B | Rest], Length, Length).
+path([A | Rest], B, Path, CurrentLength, Length) :-
+    oh(A, C, X),
+    \+member(C, [A | Rest]),
+    NewLength is CurrentLength + X,
+    path([C, A | Rest], B, Path, NewLength, Length).
+
+find_paths(A, B) :-
+    path([A], B, Path, 0, _),
+    reverse(Path, DirectPath),
+    printPath(DirectPath),
+    writef('\n'),
+    !.
+
+printPath([]).
+printPath([X]) :-
+    !, write(X).
+printPath([X|T]) :-
+    write(X),
+    write(','),
+    printPath(T).
+
+add(X, Y, P) :-
+  asserta(oh(X, Y, P)), !.
 /* try goals like
 
   ?- shortest(1,5,Path,Length).
