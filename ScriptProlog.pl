@@ -46,12 +46,14 @@ min([_|R],M,Min) :- min(R,M,Min).
 :- use_module(library(http/http_json)).
 :- use_module(library(http/json_convert)).
 :- use_module(library(http/json)).
+:- use_module(library(http/http_cors)).
 
 % :- http_handler(root(hello_world), say_hi, []).		% (1)
 :- http_handler(root(resolve),handle,[]).
 :- http_handler(root(add),add,[]).
 :- http_handler(root(clean),cleanBD,[]).
-
+:- use_module(library(http/http_cors)).
+:- setting(http:cors, list(atom), [], ['http://localhost:4200']).
 server(Port) :-
    http_server(http_dispatch,[port(Port)]).
 
@@ -65,6 +67,7 @@ add(Request) :-
   asserta(edge(PrologIn.from, PrologIn.to, PrologIn.weight)).
 
 handle(Request) :-
+  cors_enable,
   http_read_json(Request, DictIn, [json_object(dict)]),
   json_to_prolog(DictIn, PrologIn),
   shortest(PrologIn.from, PrologIn.to, Path, Length),

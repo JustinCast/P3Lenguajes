@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { PrologCommunicationService } from "./prolog-communication.service";
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
@@ -14,6 +15,9 @@ export class AppComponent implements OnInit {
   begin: number;
   end: number;
 
+  constructor(private _prolog: PrologCommunicationService)
+  {}
+
   ngOnInit() {
     for (let i = 1; i <= 36; i++) {
       this.values.push(i);
@@ -23,7 +27,7 @@ export class AppComponent implements OnInit {
   selectParams(index: number) {
     if (!this.begin) this.begin = index - 1;
     else {
-      this.end = index + 1;
+      this.end = index;
       this.disabled = true;
       this.setBee(this.end);
       this.start();
@@ -32,12 +36,12 @@ export class AppComponent implements OnInit {
 
   start() {
     this.interval = setInterval(() => {
-      this.begin++;
       let style = document.createElement("style");
       style.type = "text/css";
       style.innerHTML =
         ".background { background-image: url('../assets/spider.png'); background-repeat: no-repeat}";
       document.getElementsByTagName("head")[0].appendChild(style);
+
       let prev = document.getElementById(`${this.begin - 1}`);
       prev.classList.remove("background");
 
@@ -46,12 +50,17 @@ export class AppComponent implements OnInit {
       next.classList.add("background");
       next.classList.add("animated");
       next.classList.add("shake");
+      this.begin++;
       if (this.begin === this.end) {
         clearInterval(this.interval);
         this.setFinal();
         return;
       }
     }, 1000);
+  }
+
+  consultProlog() {
+    this._prolog.getRoute(this.begin, this.end);
   }
 
   setBee(index: number) {
