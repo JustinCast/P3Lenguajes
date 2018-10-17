@@ -50,12 +50,7 @@ cleanBD(X, Y, W) :-
 
 
 
-oh(0, 1, 1).
-oh(1, 2, 3).
-oh(1, 3, 3).
-oh(2, 3, 3).
-oh(4, 5, 3).
-
+oh(0, 0, 0).
 
 path([B | Rest], B, [B | Rest], Length, Length).
 path([A | Rest], B, Path, CurrentLength, Length) :-

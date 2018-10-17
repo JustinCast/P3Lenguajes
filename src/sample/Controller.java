@@ -58,7 +58,7 @@ public class Controller {
         if (query.hasSolution()) {
             addNodes();
 
-            String shortest = "find_paths(0, 21, X)";
+            String shortest = "find_paths(30, 32, X)";
             Query q4 = new Query(shortest);
             int cont = 0;
             while(q4.hasNext()) {
@@ -126,43 +126,134 @@ public class Controller {
                         consult.close();
                     }
                 }
+                else if(i == 1 || i == 2 || i == 3 || i == 4){
+                    if(!this.blocks.contains(i - 1)) {
+                        System.out.println(leftQuery);
+                        consult = new Query(leftQuery);
+                        consult.oneSolution();
+                        consult.close();
+                    }
+                    if(!this.blocks.contains(i + 6)) {
+                        System.out.println(downQuery);
+                        consult = new Query(downQuery);
+                        consult.oneSolution();
+                        consult.close();
+                    }
+                    if(!this.blocks.contains(i + 1)) {
+                        System.out.println(rightQuery);
+                        consult = new Query(rightQuery);
+                        consult.oneSolution();
+                        consult.close();
+                    }
+                }
                 else if(i == upperRightCorner) {
-                    consult = new Query(leftQuery); consult.oneSolution(); consult.close();
-                    consult = new Query(downQuery); consult.oneSolution(); consult.close();
+                    if(!this.blocks.contains(i - 1)) {
+                        consult = new Query(leftQuery);
+                        consult.oneSolution();
+                        consult.close();
+                    }
+                    if(!this.blocks.contains(i + 6)) {
+                        consult = new Query(downQuery);
+                        consult.oneSolution();
+                        consult.close();
+                    }
                 }
                 else if(i == lowerLeftCorner){
-                    consult = new Query(upQuery); consult.oneSolution(); consult.close();
-                    consult = new Query(rightQuery); consult.oneSolution(); consult.close();
+                    if(!this.blocks.contains(i - 6)){
+                        consult = new Query(upQuery);
+                        consult.oneSolution();
+                        consult.close();
+                    }
+                    if(!this.blocks.contains(i + 1)) {
+                        consult = new Query(rightQuery);
+                        consult.oneSolution();
+                        consult.close();
+                    }
                 }
                 else if(i == lowerRightCorner) {
-                    consult = new Query(leftQuery); consult.oneSolution(); consult.close();
-                    consult = new Query(upQuery); consult.oneSolution(); consult.close();
-                }
-                else if(i < upperRightCorner){
-                    consult = new Query(leftQuery); consult.oneSolution(); consult.close();
-                    consult = new Query(downQuery); consult.oneSolution(); consult.close();
-                    consult = new Query(rightQuery); consult.oneSolution(); consult.close();
+                    if(!this.blocks.contains(i - 1)) {
+                        consult = new Query(leftQuery);
+                        consult.oneSolution();
+                        consult.close();
+                    }
+                    if(!this.blocks.contains(i - 6)){
+                        consult = new Query(upQuery);
+                        consult.oneSolution();
+                        consult.close();
+                    }
                 }
                 else if(i == 6 || i == 12 || i == 18 || i == 24){
-                    consult = new Query(upQuery); consult.oneSolution(); consult.close();
-                    consult = new Query(downQuery); consult.oneSolution(); consult.close();
-                    consult = new Query(rightQuery); consult.oneSolution(); consult.close();
+                    if(!this.blocks.contains(i - 6)){
+                        consult = new Query(upQuery);
+                        consult.oneSolution();
+                        consult.close();
+                    }
+                    if(!this.blocks.contains(i + 6)) {
+                        consult = new Query(downQuery);
+                        consult.oneSolution();
+                        consult.close();
+                    }
+                    if(!this.blocks.contains(i+1)) {
+                        consult = new Query(rightQuery);
+                        consult.oneSolution();
+                        consult.close();
+                    }
                 }
                 else if(i == 11 || i == 17 || i == 23 || i == 29){
-                    consult = new Query(leftQuery); consult.oneSolution(); consult.close();
-                    consult = new Query(upQuery); consult.oneSolution(); consult.close();
-                    consult = new Query(downQuery); consult.oneSolution(); consult.close();
+                    if(!this.blocks.contains(i - 1)) {
+                        consult = new Query(leftQuery);
+                        consult.oneSolution();
+                        consult.close();
+                    }
+                    if(!this.blocks.contains(i - 6)){
+                        consult = new Query(upQuery);
+                        consult.oneSolution();
+                        consult.close();
+                    }
+                    if(!this.blocks.contains(i + 6)) {
+                        consult = new Query(downQuery);
+                        consult.oneSolution();
+                        consult.close();
+                    }
                 }
                 else if(i == 31 || i == 32 || i == 33 || i == 34) {
-                    consult = new Query(leftQuery); consult.oneSolution(); consult.close();
-                    consult = new Query(upQuery); consult.oneSolution(); consult.close();
-                    consult = new Query(rightQuery); consult.oneSolution(); consult.close();
+                    if(!this.blocks.contains(i - 1)) {
+                        consult = new Query(leftQuery);
+                        consult.oneSolution();
+                        consult.close();
+                    }
+                    if(!this.blocks.contains(i - 6)){
+                        consult = new Query(upQuery);
+                        consult.oneSolution();
+                        consult.close();
+                    }
+                    if(!this.blocks.contains(i+1)) {
+                        consult = new Query(rightQuery);
+                        consult.oneSolution();
+                        consult.close();
+                    }
                 }
                 else {
-                    consult = new Query(leftQuery); consult.oneSolution(); consult.close();
-                    consult = new Query(upQuery); consult.oneSolution(); consult.close();
-                    consult = new Query(downQuery); consult.oneSolution(); consult.close();
-                    consult = new Query(rightQuery); consult.oneSolution(); consult.close();
+                    if(!this.blocks.contains(i - 1)) {
+                        consult = new Query(leftQuery);
+                        consult.oneSolution();
+                        consult.close();
+                    }
+                    if(!this.blocks.contains(i - 6)){
+                        consult = new Query(upQuery);
+                        consult.oneSolution();
+                        consult.close();
+                    }
+                    if(!this.blocks.contains(i + 6)) {
+                        consult = new Query(downQuery);
+                        consult.oneSolution();
+                        consult.close();
+                    }
+                    if(!this.blocks.contains(i+1)) {
+                        consult = new Query(rightQuery);
+                        consult.oneSolution();
+                        consult.close();
+                    }
                 }
             }
         }
