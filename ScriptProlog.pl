@@ -67,9 +67,8 @@ path([A | Rest], B, Path, CurrentLength, Length) :-
 find_paths(A, B, X) :-
     path([A], B, Path, 0, _),
     reverse(Path, DirectPath),
-    printPath(DirectPath),
-    X = DirectPath,
-    !.
+    %printPath(DirectPath),
+    X = DirectPath.
 
 printPath([]).
 printPath([X]) :-
