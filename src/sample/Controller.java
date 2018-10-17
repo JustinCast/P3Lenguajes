@@ -35,11 +35,12 @@ public class Controller {
         String id = ((Button) e.getSource()).getText();
         System.out.println(id);
         if(!this.blocks.contains(id)) {
-            this.blocks.add(id);
+            this.blocks.add(Integer.parseInt(id));
             ((Button) e.getSource()).setDisable(true);
         }
     }
-    public void onStartGameClick(Event e) {
+    public void onStartGameClick(Event e) throws IOException {
+        initializeProlog();
         for (Object aRoute : this.route) {
             for (Node n : this.buttonsContainer.getChildren()) {
                 //System.out.println(aRoute);
@@ -112,47 +113,57 @@ public class Controller {
             downQuery = "add(" + i + ", " + (i + 6) + ", " + 1 + ")";
             upQuery = "add(" + i + ", " + (i - 6) + ", " + 1 + ")";
 
-            if(i == upperLeftCorner) {
-                consult = new Query(rightQuery); consult.oneSolution(); consult.close();
-                consult = new Query(downQuery); consult.oneSolution(); consult.close();
-            }
-            else if(i == upperRightCorner) {
-                consult = new Query(leftQuery); consult.oneSolution(); consult.close();
-                consult = new Query(downQuery); consult.oneSolution(); consult.close();
-            }
-            else if(i == lowerLeftCorner){
-                consult = new Query(upQuery); consult.oneSolution(); consult.close();
-                consult = new Query(rightQuery); consult.oneSolution(); consult.close();
-            }
-            else if(i == lowerRightCorner) {
-                consult = new Query(leftQuery); consult.oneSolution(); consult.close();
-                consult = new Query(upQuery); consult.oneSolution(); consult.close();
-            }
-            else if(i < upperRightCorner){
-                consult = new Query(leftQuery); consult.oneSolution(); consult.close();
-                consult = new Query(downQuery); consult.oneSolution(); consult.close();
-                consult = new Query(rightQuery); consult.oneSolution(); consult.close();
-            }
-            else if(i == 6 || i == 12 || i == 18 || i == 24){
-                consult = new Query(upQuery); consult.oneSolution(); consult.close();
-                consult = new Query(downQuery); consult.oneSolution(); consult.close();
-                consult = new Query(rightQuery); consult.oneSolution(); consult.close();
-            }
-            else if(i == 11 || i == 17 || i == 23 || i == 29){
-                consult = new Query(leftQuery); consult.oneSolution(); consult.close();
-                consult = new Query(upQuery); consult.oneSolution(); consult.close();
-                consult = new Query(downQuery); consult.oneSolution(); consult.close();
-            }
-            else if(i == 31 || i == 32 || i == 33 || i == 34) {
-                consult = new Query(leftQuery); consult.oneSolution(); consult.close();
-                consult = new Query(upQuery); consult.oneSolution(); consult.close();
-                consult = new Query(rightQuery); consult.oneSolution(); consult.close();
-            }
-            else {
-                consult = new Query(leftQuery); consult.oneSolution(); consult.close();
-                consult = new Query(upQuery); consult.oneSolution(); consult.close();
-                consult = new Query(downQuery); consult.oneSolution(); consult.close();
-                consult = new Query(rightQuery); consult.oneSolution(); consult.close();
+            if(!this.blocks.contains(i)){
+                if(i == upperLeftCorner) {
+                    if(!this.blocks.contains(i+1)) {
+                        consult = new Query(rightQuery);
+                        consult.oneSolution();
+                        consult.close();
+                    }
+                    if(!this.blocks.contains(i + 6)) {
+                        consult = new Query(downQuery);
+                        consult.oneSolution();
+                        consult.close();
+                    }
+                }
+                else if(i == upperRightCorner) {
+                    consult = new Query(leftQuery); consult.oneSolution(); consult.close();
+                    consult = new Query(downQuery); consult.oneSolution(); consult.close();
+                }
+                else if(i == lowerLeftCorner){
+                    consult = new Query(upQuery); consult.oneSolution(); consult.close();
+                    consult = new Query(rightQuery); consult.oneSolution(); consult.close();
+                }
+                else if(i == lowerRightCorner) {
+                    consult = new Query(leftQuery); consult.oneSolution(); consult.close();
+                    consult = new Query(upQuery); consult.oneSolution(); consult.close();
+                }
+                else if(i < upperRightCorner){
+                    consult = new Query(leftQuery); consult.oneSolution(); consult.close();
+                    consult = new Query(downQuery); consult.oneSolution(); consult.close();
+                    consult = new Query(rightQuery); consult.oneSolution(); consult.close();
+                }
+                else if(i == 6 || i == 12 || i == 18 || i == 24){
+                    consult = new Query(upQuery); consult.oneSolution(); consult.close();
+                    consult = new Query(downQuery); consult.oneSolution(); consult.close();
+                    consult = new Query(rightQuery); consult.oneSolution(); consult.close();
+                }
+                else if(i == 11 || i == 17 || i == 23 || i == 29){
+                    consult = new Query(leftQuery); consult.oneSolution(); consult.close();
+                    consult = new Query(upQuery); consult.oneSolution(); consult.close();
+                    consult = new Query(downQuery); consult.oneSolution(); consult.close();
+                }
+                else if(i == 31 || i == 32 || i == 33 || i == 34) {
+                    consult = new Query(leftQuery); consult.oneSolution(); consult.close();
+                    consult = new Query(upQuery); consult.oneSolution(); consult.close();
+                    consult = new Query(rightQuery); consult.oneSolution(); consult.close();
+                }
+                else {
+                    consult = new Query(leftQuery); consult.oneSolution(); consult.close();
+                    consult = new Query(upQuery); consult.oneSolution(); consult.close();
+                    consult = new Query(downQuery); consult.oneSolution(); consult.close();
+                    consult = new Query(rightQuery); consult.oneSolution(); consult.close();
+                }
             }
         }
     }
