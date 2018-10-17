@@ -25,13 +25,19 @@ public class Controller {
     private boolean bee = false;
     private ArrayList<String> allRoutes = new ArrayList<>();
     private ArrayList route = new ArrayList();
+    private ArrayList blocks = new ArrayList();
 
     public Controller() throws IOException {
-        initializeProlog();
+        //initializeProlog();
     }
 
     public void onBtnClick(Event e) {
-
+        String id = ((Button) e.getSource()).getText();
+        System.out.println(id);
+        if(!this.blocks.contains(id)) {
+            this.blocks.add(id);
+            ((Button) e.getSource()).setDisable(true);
+        }
     }
     public void onStartGameClick(Event e) {
         for (Object aRoute : this.route) {
