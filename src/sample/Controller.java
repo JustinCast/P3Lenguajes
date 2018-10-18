@@ -13,7 +13,6 @@ import org.jpl7.Query;
 import org.jpl7.Term;
 
 import javax.swing.*;
-import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
+import java.util.Timer;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Controller {
@@ -41,6 +41,7 @@ public class Controller {
     @FXML
     private Button prev;
     private final ToggleGroup selectGroup = new ToggleGroup();
+    private Timer timer;
 
     public Controller() throws IOException {
     }
@@ -55,7 +56,6 @@ public class Controller {
         String id = ((Button) e.getSource()).getText();
         if(this.selectBlocks.isSelected()){
             if(!this.blocks.contains(Integer.parseInt(id))) {
-                System.out.println("Entro");
                 this.blocks.add(Integer.parseInt(id));
                 ((Button) e.getSource())
                         .setStyle("-fx-border-color:red; -fx-background-repeat:no-repeat; " +
@@ -96,9 +96,52 @@ public class Controller {
 
     public void onStartGameClick(Event e) throws IOException {
         initializeProlog();
-        ActionListener al = e1 -> playGame();
-        Timer timer = new Timer(500, al);
-        timer.start();
+        /*ActionListener al = new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                if(timer.)
+                playGame();
+            }
+        };*/
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            int period = 0;
+            @Override
+            public void run() {
+                playGame();
+                period++;
+                if(period == 5) {
+                    try {
+                        changePosition();
+                        period = 0;
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        }, 500, 500);
+    }
+
+    private void changePosition() throws IOException {
+        System.out.println("FINALIZOOOOOOOOOOOO");
+        Random rand = new Random();
+        int pickedNumber = rand.nextInt(36) + 1;
+        int a = Integer.parseInt(begin.getText());
+        int b = Integer.parseInt(end.getText());
+        while(blocks.contains(pickedNumber) || pickedNumber == a || pickedNumber == b)
+            pickedNumber = rand.nextInt(35) + 1;
+        end.setStyle("-fx-border-color:red; -fx-background-color: white;");
+        end = (Button) buttonsContainer.getChildren().get(pickedNumber);
+        end.setStyle("" +
+                "-fx-border-color:red; -fx-background-repeat:no-repeat; " +
+                "-fx-color: transparent;" +
+                "-fx-background-position: center;" +
+                "-fx-background-image: url('./assets/bee.png'); " +
+                "-fx-background-size: 30%");
+        begin = (Button) buttonsContainer.getChildren().get(buttonsContainer.getChildren().indexOf(prev)+1);
+        initializeProlog();
     }
 
     private void playGame() {
