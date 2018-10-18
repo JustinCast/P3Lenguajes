@@ -1,13 +1,6 @@
 /* prolog tutorial 2.15 Graph structures and paths */
 
-edge(1,2,1).
-edge(1,4,3.5).
-edge(1,3,2.5).
-edge(2,3,1).
-edge(2,5,2.5).
-edge(3,4,1).
-edge(3,5,2.2).
-edge(4,5,1).
+edge(0,0,0).
 
 
 load(File) :- 
@@ -74,9 +67,39 @@ printPath([X|T]) :-
     printPath(T).
 
 add(X, Y, P) :-
-  asserta(oh(X, Y, P)), !.
+  asserta(edge(X, Y, P)), !.
 /* try goals like
 
   ?- shortest(1,5,Path,Length).
 
 */
+
+:-dynamic
+ rpath/2.      % A reversed path
+
+
+path(From,To,Dist) :- edge(To,From,Dist).
+path(From,To,Dist) :- edge(From,To,Dist).
+
+shorterPath([H|Path], Dist) :-         % path < stored path? replace it
+ rpath([H|_], D), !, Dist < D,          % match target node [H|_]
+ retract(rpath([H|_],_)),
+ assert(rpath([H|Path], Dist)).
+shorterPath(Path, Dist) :-         % Otherwise store a new path
+ assert(rpath(Path,Dist)).
+
+traverse(From, Path, Dist) :-      % traverse all reachable nodes
+ path(From, T, D),      % For each neighbor
+ not(memberchk(T, Path)),     % which is unvisited
+ shorterPath([T,From|Path], Dist+D), % Update shortest path and distance
+ traverse(T,[From|Path],Dist+D).     % Then traverse the neighbor
+
+traverse(From) :-
+ retractall(rpath(_,_)),           % Remove solutions
+ traverse(From,[],0).              % Traverse from origin
+traverse(_).
+
+go(From, To,Path) :-
+ traverse(From),                   % Find all distances
+ rpath([To|RPath],_)->         % If the target was reached
+   reverse([To|RPath], Path).

@@ -1,9 +1,11 @@
 package sample;
 
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Background;
@@ -40,6 +42,8 @@ public class Controller {
     private Button end;
     @FXML
     private Button prev;
+    @FXML
+    private ProgressBar progressBar;
     private final ToggleGroup selectGroup = new ToggleGroup();
     private Timer timer;
 
@@ -96,38 +100,33 @@ public class Controller {
 
     public void onStartGameClick(Event e) throws IOException {
         initializeProlog();
-        /*ActionListener al = new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                if(timer.)
-                playGame();
-            }
-        };*/
         timer = new Timer();
         timer.schedule(new TimerTask() {
             int period = 0;
             @Override
             public void run() {
-                playGame();
-                period++;
+                //int progress =
                 if(period == 5) {
                     try {
+                        cleanPrologBD();
+                        route.clear();
                         changePosition();
-                        period = 0;
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
+                    period = 0;
                 }
+                else {
+                    playGame();
+                }
+                period++;
             }
-        }, 500, 500);
+        }, 500, 800);
     }
 
     private void changePosition() throws IOException {
-        System.out.println("FINALIZOOOOOOOOOOOO");
         Random rand = new Random();
-        int pickedNumber = rand.nextInt(36) + 1;
+        int pickedNumber = rand.nextInt(35) + 1;
         int a = Integer.parseInt(begin.getText());
         int b = Integer.parseInt(end.getText());
         while(blocks.contains(pickedNumber) || pickedNumber == a || pickedNumber == b)
@@ -140,7 +139,7 @@ public class Controller {
                 "-fx-background-position: center;" +
                 "-fx-background-image: url('./assets/bee.png'); " +
                 "-fx-background-size: 30%");
-        begin = (Button) buttonsContainer.getChildren().get(buttonsContainer.getChildren().indexOf(prev)+1);
+        begin = (Button) buttonsContainer.getChildren().get(buttonsContainer.getChildren().indexOf(prev));
         initializeProlog();
     }
 
@@ -150,6 +149,9 @@ public class Controller {
                 if (((Button)n).getText().equals(aRoute)) {
                     if(this.prev != null)
                         this.prev.setStyle("-fx-border-color:red; -fx-background-color: white;");
+                    if(((Button)n).getText().equals(this.end.getText())){
+                        JOptionPane.showMessageDialog(null, "You win");
+                    }
                     n.setStyle("" +
                             "-fx-border-color:red; -fx-background-repeat:no-repeat; " +
                             "-fx-color: transparent;" +
@@ -162,7 +164,18 @@ public class Controller {
                 }
             }
             //System.out.println("Indice: " + s);
-            System.out.println("ROUTE: " + aRoute);
+            //System.out.println("ROUTE: " + aRoute);
+        }
+    }
+
+    private void cleanPrologBD() {
+        String PROLOG = "consult('ScriptProlog.pl')";
+        Query query = new Query(PROLOG);
+        if (query.hasSolution()) {
+            String clean = "cleanBD(X, Y, W)";
+            Query cleanQuery = new Query(clean);
+            cleanQuery.oneSolution();
+            cleanQuery.close();
         }
     }
 
@@ -171,16 +184,12 @@ public class Controller {
         Query query = new Query(PROLOG);
         if (query.hasSolution()) {
             addNodes();
-
-            String shortest = "find_paths("+ Integer.parseInt(this.begin.getText()) +"," + Integer.parseInt(this.end.getText()) + ","+ "X)";
+            System.out.println("INICIO: " + this.begin.getText());
+            String shortest = "go("+ Integer.parseInt(this.begin.getText()) +"," + Integer.parseInt(this.end.getText()) + ","+ "X)";
             Query q4 = new Query(shortest);
-            int cont = 0;
             while(q4.hasNext()) {
                 this.allRoutes.add(regexedString(q4.nextSolution().get("X").toString()));
                 //System.out.println(this.allRoutes.get(cont));
-                if(cont == 20000)
-                    break;
-                cont++;
             }
 
             getBestRoute(this.allRoutes);
