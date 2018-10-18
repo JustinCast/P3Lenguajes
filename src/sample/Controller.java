@@ -106,7 +106,7 @@ public class Controller {
             @Override
             public void run() {
                 //int progress =
-                if(period == 5) {
+                if(period == 4) {
                     try {
                         cleanPrologBD();
                         route.clear();
@@ -121,16 +121,20 @@ public class Controller {
                 }
                 period++;
             }
-        }, 500, 800);
+        }, 500, 500);
     }
 
     private void resetGame() {
         this.buttonsContainer.getChildren().forEach((node -> {
             node.getStyleClass().clear();
             node.setStyle(null);
+            node.getStyleClass().add("mtx-btn");
         }));
         this.begin = null; this.end = null;
         this.timer.cancel();
+        this.playButton.setDisable(true);
+        this.route.clear();
+        this.allRoutes.clear();
     }
 
     private void changePosition() throws IOException {
@@ -161,6 +165,7 @@ public class Controller {
                     if(((Button)n).getText().equals(this.end.getText())){
                         JOptionPane.showMessageDialog(null, "You win");
                         resetGame();
+                        return;
                     }
                     n.setStyle("" +
                             "-fx-border-color:red; -fx-background-repeat:no-repeat; " +
@@ -213,6 +218,7 @@ public class Controller {
         for(String s : allRoutes)
             if(s.length() < best.length())
                 best = s;
+        this.allRoutes.clear();
         this.route.addAll(Arrays.asList(best.split(",")));
     }
 
