@@ -124,6 +124,15 @@ public class Controller {
         }, 500, 800);
     }
 
+    private void resetGame() {
+        this.buttonsContainer.getChildren().forEach((node -> {
+            node.getStyleClass().clear();
+            node.setStyle(null);
+        }));
+        this.begin = null; this.end = null;
+        this.timer.cancel();
+    }
+
     private void changePosition() throws IOException {
         Random rand = new Random();
         int pickedNumber = rand.nextInt(35) + 1;
@@ -151,6 +160,7 @@ public class Controller {
                         this.prev.setStyle("-fx-border-color:red; -fx-background-color: white;");
                     if(((Button)n).getText().equals(this.end.getText())){
                         JOptionPane.showMessageDialog(null, "You win");
+                        resetGame();
                     }
                     n.setStyle("" +
                             "-fx-border-color:red; -fx-background-repeat:no-repeat; " +
