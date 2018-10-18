@@ -3,3 +3,10 @@
     -fx-background-repeat:no-repeat;
     -fx-color: transparent;
 }
+#pane{
+    -fx-background-image: url("../assets/background.png");
+    -fx-background-repeat: stretch;
+    -fx-background-size: 1200 1200;
+    -fx-background-position: center center;
+    -fx-effect: dropshadow(three-pass-box, black, 30, 0.5, 0, 0);
+}

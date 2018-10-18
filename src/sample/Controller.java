@@ -1,6 +1,7 @@
 package sample;
 
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -46,7 +47,7 @@ public class Controller {
     private ProgressBar progressBar;
     private final ToggleGroup selectGroup = new ToggleGroup();
     private Timer timer;
-
+    private Task copyWorker = createWorker();;
     public Controller() throws IOException {
     }
 
@@ -97,15 +98,29 @@ public class Controller {
         else JOptionPane.showMessageDialog(null, "Select 'Select Blocks' Button first");
     }
 
+    private Task createWorker() {
+        return new Task() {
+            @Override
+            protected Object call() throws Exception {
+                for (int i = 0; i < 1000000; i++) {
+                    Thread.sleep(2000);
+                    updateProgress(i, 10);
+                }
+                return true;
+            }
+        };
+    }
 
     public void onStartGameClick(Event e) throws IOException {
         initializeProlog();
         timer = new Timer();
+        progressBar.setProgress(0);
         timer.schedule(new TimerTask() {
             int period = 0;
+
             @Override
             public void run() {
-                //int progress =
+                progressBar.setProgress((double) period/4);
                 if(period == 4) {
                     try {
                         cleanPrologBD();
@@ -119,6 +134,7 @@ public class Controller {
                 else {
                     playGame();
                 }
+
                 period++;
             }
         }, 500, 500);
@@ -135,6 +151,7 @@ public class Controller {
         this.playButton.setDisable(true);
         this.route.clear();
         this.allRoutes.clear();
+        this.progressBar.setProgress(0);
     }
 
     private void changePosition() throws IOException {
