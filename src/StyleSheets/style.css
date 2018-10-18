@@ -1,5 +1,6 @@
 .mtx-btn {
     -fx-border-color:red;
+    -fx-background-color: white
     -fx-background-repeat:no-repeat;
     -fx-color: transparent;
 }

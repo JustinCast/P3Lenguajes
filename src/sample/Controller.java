@@ -142,9 +142,7 @@ public class Controller {
 
     private void resetGame() {
         this.buttonsContainer.getChildren().forEach((node -> {
-            node.getStyleClass().clear();
             node.setStyle(null);
-            node.getStyleClass().add("mtx-btn");
         }));
         this.begin = null; this.end = null;
         this.timer.cancel();
@@ -157,11 +155,11 @@ public class Controller {
     private void changePosition() throws IOException {
         Random rand = new Random();
         int pickedNumber = rand.nextInt(35) + 1;
-        int a = Integer.parseInt(begin.getText());
+        int a = Integer.parseInt(prev.getText());
         int b = Integer.parseInt(end.getText());
         while(blocks.contains(pickedNumber) || pickedNumber == a || pickedNumber == b)
             pickedNumber = rand.nextInt(35) + 1;
-        end.setStyle("-fx-border-color:red; -fx-background-color: white;");
+        end.setStyle(null);
         end = (Button) buttonsContainer.getChildren().get(pickedNumber);
         end.setStyle("" +
                 "-fx-border-color:red; -fx-background-repeat:no-repeat; " +
@@ -178,8 +176,14 @@ public class Controller {
             for (Node n : this.buttonsContainer.getChildren()) {
                 if (((Button)n).getText().equals(aRoute)) {
                     if(this.prev != null)
-                        this.prev.setStyle("-fx-border-color:red; -fx-background-color: white;");
+                        this.prev.setStyle(null);
                     if(((Button)n).getText().equals(this.end.getText())){
+                        n.setStyle("" +
+                                "-fx-border-color:red; -fx-background-repeat:no-repeat; " +
+                                "-fx-color: transparent;" +
+                                "-fx-background-position: center;" +
+                                "-fx-background-image: url('./assets/trophy.png'); " +
+                                "-fx-background-size: 30%");
                         JOptionPane.showMessageDialog(null, "You win");
                         resetGame();
                         return;
@@ -195,8 +199,6 @@ public class Controller {
                     return;
                 }
             }
-            //System.out.println("Indice: " + s);
-            //System.out.println("ROUTE: " + aRoute);
         }
     }
 

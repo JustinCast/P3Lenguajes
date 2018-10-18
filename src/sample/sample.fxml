@@ -106,12 +106,12 @@
             </ToggleButton>
             <Label text="Changing position" textFill="#4285f4">
                <HBox.margin>
-                  <Insets left="80.0" />
+                  <Insets left="40.0" />
                </HBox.margin>
             </Label>
-            <ProgressBar fx:id="progressBar" prefHeight="20.0" prefWidth="394.0" progress="0.0">
+            <ProgressBar fx:id="progressBar" prefHeight="20.0" prefWidth="370.0" progress="0.0">
                <HBox.margin>
-                  <Insets left="20.0" />
+                  <Insets left="30.0" />
                </HBox.margin>
             </ProgressBar>
          </children>
