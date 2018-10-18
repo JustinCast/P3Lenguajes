@@ -82,15 +82,20 @@
       </GridPane>
       <Label text="Spider Robot" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
          <font>
-            <Font name="Fira Code Regular" size="24.0" />
+            <Font name="Fira Code Regular" size="36.0" />
          </font>
       </Label>
       <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <Button fx:id="playBtn" mnemonicParsing="false" onMouseClicked="#onStartGameClick" text="Start Game" />
-            <ToggleButton mnemonicParsing="false" text="Seleccionar Obstáculos">
+            <Button fx:id="playButton" disable="true" mnemonicParsing="false" onMouseClicked="#onStartGameClick" text="Start Game" />
+            <ToggleButton fx:id="selectBlocks" mnemonicParsing="false" text="Select Blocks">
                <HBox.margin>
-                  <Insets left="50.0" />
+                  <Insets left="30.0" />
+               </HBox.margin>
+            </ToggleButton>
+            <ToggleButton fx:id="selectBeginEnd" mnemonicParsing="false" text="Select Begin - End">
+               <HBox.margin>
+                  <Insets left="25.0" />
                </HBox.margin>
             </ToggleButton>
          </children>

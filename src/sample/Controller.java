@@ -4,6 +4,8 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -11,8 +13,10 @@ import org.jpl7.Query;
 import org.jpl7.Term;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,31 +25,98 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Controller {
     @FXML GridPane buttonsContainer;
-    private boolean spider = false;
-    private boolean bee = false;
+    @FXML
+    ToggleButton selectBlocks;
+    @FXML
+    ToggleButton selectBeginEnd;
+    @FXML
+    Button playButton;
     private ArrayList<String> allRoutes = new ArrayList<>();
     private ArrayList route = new ArrayList();
     private ArrayList blocks = new ArrayList();
+    @FXML
+    private Button begin;
+    @FXML
+    private Button end;
+    @FXML
+    private Button prev;
+    private final ToggleGroup selectGroup = new ToggleGroup();
 
     public Controller() throws IOException {
-        //initializeProlog();
+    }
+
+    private void config() {
+        this.selectBlocks.setToggleGroup(this.selectGroup);
+        this.selectBeginEnd.setToggleGroup(this.selectGroup);
     }
 
     public void onBtnClick(Event e) {
+        config();
         String id = ((Button) e.getSource()).getText();
-        System.out.println(id);
-        if(!this.blocks.contains(id)) {
-            this.blocks.add(Integer.parseInt(id));
-            ((Button) e.getSource()).setDisable(true);
+        if(this.selectBlocks.isSelected()){
+            if(!this.blocks.contains(Integer.parseInt(id))) {
+                System.out.println("Entro");
+                this.blocks.add(Integer.parseInt(id));
+                ((Button) e.getSource())
+                        .setStyle("-fx-border-color:red; -fx-background-repeat:no-repeat; " +
+                                "-fx-color: transparent;" +
+                                "-fx-background-position: center;" +
+                                "-fx-background-image: url('./assets/block.png'); " +
+                                "-fx-background-size: 100%");
+            }else {
+                int index = this.blocks.indexOf(Integer.parseInt(id));
+                this.blocks.remove(index);
+                ((Button) e.getSource()).setStyle("-fx-border-color:red;-fx-color: transparent;-fx-background-color: white;");
+            }
         }
+        else if(this.selectBeginEnd.isSelected()){
+            if(this.begin == null)
+            {
+                this.begin = ((Button) e.getSource());
+                this.begin.setStyle("" +
+                        "-fx-border-color:red; -fx-background-repeat:no-repeat; " +
+                        "-fx-color: transparent;" +
+                        "-fx-background-position: center;" +
+                        "-fx-background-image: url('./assets/spider.png'); " +
+                        "-fx-background-size: 30%");
+                return;
+            }
+            this.end = ((Button) e.getSource());
+            this.end.setStyle("" +
+                    "-fx-border-color:red; -fx-background-repeat:no-repeat; " +
+                    "-fx-color: transparent;" +
+                    "-fx-background-position: center;" +
+                    "-fx-background-image: url('./assets/bee.png'); " +
+                    "-fx-background-size: 30%");
+            this.playButton.setDisable(false);
+        }
+        else JOptionPane.showMessageDialog(null, "Select 'Select Blocks' Button first");
     }
+
+
     public void onStartGameClick(Event e) throws IOException {
         initializeProlog();
+        ActionListener al = e1 -> playGame();
+        Timer timer = new Timer(500, al);
+        timer.start();
+    }
+
+    private void playGame() {
         for (Object aRoute : this.route) {
             for (Node n : this.buttonsContainer.getChildren()) {
-                //System.out.println(aRoute);
-                if (((Button)n).getText().equals(aRoute))
-                    n.setStyle("-fx-border-color:red; -fx-background-color: blue;");
+                if (((Button)n).getText().equals(aRoute)) {
+                    if(this.prev != null)
+                        this.prev.setStyle("-fx-border-color:red; -fx-background-color: white;");
+                    n.setStyle("" +
+                            "-fx-border-color:red; -fx-background-repeat:no-repeat; " +
+                            "-fx-color: transparent;" +
+                            "-fx-background-position: center;" +
+                            "-fx-background-image: url('./assets/spider.png'); " +
+                            "-fx-background-size: 30%");
+                    this.route.remove(aRoute);
+                    this.prev = (Button) n;
+                    return;
+                }
             }
             //System.out.println("Indice: " + s);
             System.out.println("ROUTE: " + aRoute);
@@ -58,7 +129,7 @@ public class Controller {
         if (query.hasSolution()) {
             addNodes();
 
-            String shortest = "find_paths(30, 32, X)";
+            String shortest = "find_paths("+ Integer.parseInt(this.begin.getText()) +"," + Integer.parseInt(this.end.getText()) + ","+ "X)";
             Query q4 = new Query(shortest);
             int cont = 0;
             while(q4.hasNext()) {
