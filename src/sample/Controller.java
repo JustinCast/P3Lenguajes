@@ -1,7 +1,5 @@
 package sample;
 
-import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -9,22 +7,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 import org.jpl7.Query;
-import org.jpl7.Term;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.*;
 import java.util.Timer;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class Controller {
     @FXML GridPane buttonsContainer;
@@ -47,7 +36,6 @@ public class Controller {
     private ProgressBar progressBar;
     private final ToggleGroup selectGroup = new ToggleGroup();
     private Timer timer;
-    private Task copyWorker = createWorker();;
     public Controller() throws IOException {
     }
 
@@ -62,53 +50,60 @@ public class Controller {
         if(this.selectBlocks.isSelected()){
             if(!this.blocks.contains(Integer.parseInt(id))) {
                 this.blocks.add(Integer.parseInt(id));
-                ((Button) e.getSource())
-                        .setStyle("-fx-border-color:red; -fx-background-repeat:no-repeat; " +
-                                "-fx-color: transparent;" +
-                                "-fx-background-position: center;" +
-                                "-fx-background-image: url('./assets/block.png'); " +
-                                "-fx-background-size: 100%");
+                setBlockStyle((Button) e.getSource());
             }else {
                 int index = this.blocks.indexOf(Integer.parseInt(id));
                 this.blocks.remove(index);
-                ((Button) e.getSource()).setStyle("-fx-border-color:red;-fx-color: transparent;-fx-background-color: white;");
+                ((Button) e.getSource()).setStyle(null);
             }
         }
         else if(this.selectBeginEnd.isSelected()){
             if(this.begin == null)
             {
                 this.begin = ((Button) e.getSource());
-                this.begin.setStyle("" +
-                        "-fx-border-color:red; -fx-background-repeat:no-repeat; " +
-                        "-fx-color: transparent;" +
-                        "-fx-background-position: center;" +
-                        "-fx-background-image: url('./assets/spider.png'); " +
-                        "-fx-background-size: 30%");
+                setSpiderStyle(begin);
                 return;
             }
             this.end = ((Button) e.getSource());
-            this.end.setStyle("" +
-                    "-fx-border-color:red; -fx-background-repeat:no-repeat; " +
-                    "-fx-color: transparent;" +
-                    "-fx-background-position: center;" +
-                    "-fx-background-image: url('./assets/bee.png'); " +
-                    "-fx-background-size: 30%");
+            setBeeStyle(end);
             this.playButton.setDisable(false);
         }
         else JOptionPane.showMessageDialog(null, "Select 'Select Blocks' Button first");
     }
 
-    private Task createWorker() {
-        return new Task() {
-            @Override
-            protected Object call() throws Exception {
-                for (int i = 0; i < 1000000; i++) {
-                    Thread.sleep(2000);
-                    updateProgress(i, 10);
-                }
-                return true;
-            }
-        };
+    private void setSpiderStyle(Button b) {
+        b.setStyle("" +
+                "-fx-border-color:red; -fx-background-repeat:no-repeat; " +
+                "-fx-color: transparent;" +
+                "-fx-background-position: center;" +
+                "-fx-background-image: url('./assets/spider.png'); " +
+                "-fx-background-size: 30%");
+    }
+
+    private void setBeeStyle(Button b) {
+        b.setStyle("" +
+                "-fx-border-color:red; -fx-background-repeat:no-repeat; " +
+                "-fx-color: transparent;" +
+                "-fx-background-position: center;" +
+                "-fx-background-image: url('./assets/bee.png'); " +
+                "-fx-background-size: 30%");
+    }
+
+    private void setTrophyStyle(Button b) {
+        b.setStyle("" +
+                "-fx-border-color:red; -fx-background-repeat:no-repeat; " +
+                "-fx-color: transparent;" +
+                "-fx-background-position: center;" +
+                "-fx-background-image: url('./assets/trophy.png'); " +
+                "-fx-background-size: 30%");
+    }
+
+    private void setBlockStyle(Button b) {
+        b.setStyle("-fx-border-color:red; -fx-background-repeat:no-repeat; " +
+                "-fx-color: transparent;" +
+                "-fx-background-position: center;" +
+                "-fx-background-image: url('./assets/block.png'); " +
+                "-fx-background-size: 100%");
     }
 
     public void onStartGameClick(Event e) throws IOException {
@@ -161,12 +156,7 @@ public class Controller {
             pickedNumber = rand.nextInt(35) + 1;
         end.setStyle(null);
         end = (Button) buttonsContainer.getChildren().get(pickedNumber);
-        end.setStyle("" +
-                "-fx-border-color:red; -fx-background-repeat:no-repeat; " +
-                "-fx-color: transparent;" +
-                "-fx-background-position: center;" +
-                "-fx-background-image: url('./assets/bee.png'); " +
-                "-fx-background-size: 30%");
+        setBeeStyle(end);
         begin = (Button) buttonsContainer.getChildren().get(buttonsContainer.getChildren().indexOf(prev));
         initializeProlog();
     }
@@ -178,22 +168,12 @@ public class Controller {
                     if(this.prev != null)
                         this.prev.setStyle(null);
                     if(((Button)n).getText().equals(this.end.getText())){
-                        n.setStyle("" +
-                                "-fx-border-color:red; -fx-background-repeat:no-repeat; " +
-                                "-fx-color: transparent;" +
-                                "-fx-background-position: center;" +
-                                "-fx-background-image: url('./assets/trophy.png'); " +
-                                "-fx-background-size: 30%");
+                        setTrophyStyle((Button) n);
                         JOptionPane.showMessageDialog(null, "You win");
                         resetGame();
                         return;
                     }
-                    n.setStyle("" +
-                            "-fx-border-color:red; -fx-background-repeat:no-repeat; " +
-                            "-fx-color: transparent;" +
-                            "-fx-background-position: center;" +
-                            "-fx-background-image: url('./assets/spider.png'); " +
-                            "-fx-background-size: 30%");
+                    setSpiderStyle((Button) n);
                     this.route.remove(aRoute);
                     this.prev = (Button) n;
                     return;
